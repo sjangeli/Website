@@ -277,7 +277,7 @@ resource "aws_lambda_permission" "api_gateway_invoke" {
 
 # IAM Role for Lambda
 resource "aws_iam_role" "lambda_role" {
-  name = steveangeli_WebsiteCounter-role-kq9x7khv
+  name = "steveangeli_WebsiteCounter-role-kq9x7khv"
   path = "/service-role/"
 
   assume_role_policy = jsonencode({

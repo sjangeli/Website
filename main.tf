@@ -1,7 +1,6 @@
 # Specify the provider
 provider "aws" {
   region = "us-east-1"
-  profile = "admin"
 }
 
 # S3 Bucket for Website Hosting

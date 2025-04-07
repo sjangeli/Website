@@ -295,6 +295,30 @@ resource "aws_iam_role" "lambda_role" {
   })
 }
 
+resource "aws_iam_policy" "dynamodb_access_policy" {
+  name        = "steveangeli_WebsiteCounter_DynamoDBAccessPolicy"
+  description = "IAM policy for Lambda to access DynamoDB table"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",    # Add putItem if the lambda also writes to the table
+          "dynamodb:UpdateItem",  # Add UpdateItem if the lambda updates the table
+        ],
+        Effect   = "Allow",
+        Resource = "arn:aws:dynamodb:us-east-1:593793034365:table/MyTable",
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_dynamodb_policy_attach" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.dynamodb_access_policy.arn
+}
+
 # DynamoDB Table
 resource "aws_dynamodb_table" "visitor_counter_table" {
   name           = "MyTable"

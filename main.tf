@@ -330,7 +330,7 @@ resource "aws_route53_record" "root" {
   type    = "A"
 
   alias {
-    name                   = aws_cloudfront_distribution.cloudfront.domain_name
+    name                   = aws_cloudfront_distribution.website_distribution.domain_name
     zone_id                = "Z2FDTNDATAQYW2"              # CloudFront's hosted zone ID (static value for all CloudFront distributions)
     evaluate_target_health = false
   }

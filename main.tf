@@ -277,7 +277,7 @@ resource "aws_lambda_permission" "api_gateway_invoke" {
 
 # IAM Role for Lambda
 resource "aws_iam_role" "lambda_role" {
-  name = "steveangeli_WebsiteCounter-role-kq9x7khv"
+  name = "aws_iam_role.lambda_role.name"
   path = "/service-role/"
 
   assume_role_policy = jsonencode({
@@ -330,7 +330,7 @@ resource "aws_route53_record" "root" {
   type    = "A"
 
   alias {
-    name                   = "dm2l25cjzsdh8.cloudfront.net"
+    name                   = "aws_cloudfront_distribution.cloudfront.domain_name"
     zone_id                = "Z2FDTNDATAQYW2"              # CloudFront's hosted zone ID (static value for all CloudFront distributions)
     evaluate_target_health = false
   }

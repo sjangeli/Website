@@ -336,6 +336,22 @@ resource "aws_dynamodb_table" "visitor_counter_table" {
   }
 }
 
+resource "aws_dynamodb_table_item" "initial_item" {
+  table_name = aws_dynamodb_table.visitor_counter_table.name
+  hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
+
+  item = jsonencode({
+    "id" = {
+      "S" = "0"
+    },
+    "count" = {
+      "N" = "0"
+    }
+  })
+
+  depends_on = [aws_dynamodb_table.visitor_counter_table]
+}
+
 # Route53 Zone
 resource "aws_route53_zone" "hosted_zone" {
   name = "steveangeli.com"

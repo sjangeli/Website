@@ -1,0 +1,10 @@
+terraform.tfstate
+terraform.tfstate.1743730163.backup
+terraform.tfstate.backup
+.DS_Store
+.terraform/providers/registry.terraform.io/hashicorp/local/2.5.2/darwin_amd64/terraform-provider-local_v2.5.2_x5
+.terraform/providers/registry.terraform.io/hashicorp/local/2.5.2/darwin_amd64/LICENSE.txt
+.terraform/providers/registry.terraform.io/hashicorp/aws/5.93.0/darwin_amd64/terraform-provider-aws_v5.93.0_x5
+.terraform/providers/registry.terraform.io/hashicorp/aws/5.93.0/darwin_amd64/LICENSE.txt
+Website.code-workspace
+.terraform.lock.hcl

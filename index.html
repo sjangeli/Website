@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Welcome to my personal website, now hosted on Amazon S3!">
+    <meta name="keywords" content="personal website, Amazon S3, web hosting, portfolio">
+    <meta name="author" content="Steve Angeli">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Steve Angeli's Website">
+    <meta property="og:description" content="Welcome to my personal website, now hosted on Amazon S3!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://www.stevenageli.com">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon_io/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/favicon_io/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="images/favicon_io/android-chrome-512x512.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <title>Steve Angeli's Website</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header id="header">
+        <h1>Steve Angeli</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="resume.html">Résumé</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="projects">
+            <h2>Projects</h2>
+            <div class="projects-container">
+                <div class="project">
+                    <h3>Chicago Arrest Predictor</h3>
+                    <p>This project illumintates insights into criminal and policing behavior. Utlizing machine learning techniques, the model generates probabilities and predictions of whether a particular criminal report will result in an arrest.</p>
+                    <a href="https://github.com/sjangeli/Thinkful-Data-Science-Projects/blob/master/Final_Project.ipynb" target="_blank">
+                        <img src="images/chicago-arrest-predictor.png" alt="Chicago Arrest Predictor" class="project-image"></a>
+                </div>
+                <div class="project">
+                    <h3>Metro-Milwaukee School Landscape Performance</h3>
+                    <p>Leveraging unsupervised learning, this project examines school performance indicators and student body demographic information.</p>
+                    <a href="https://github.com/sjangeli/Thinkful-Data-Science-Projects/blob/master/Unsupervised Learning Capstone.ipynb" target="_blank">
+                        <img src="images/cesa.png" alt="Metro-Milwaukee School Landscape Performance" class="project-image"></a>
+                </div>
+                <div class="project">
+                    <h3>Modeling Wisconsin Teacher Compensation</h3>
+                    <p>Analyzed public data on teacher compensation and school district data to build a model to learn what factors impact teacher compensation the most.</p>
+                    <a href="https://github.com/sjangeli/Thinkful-Data-Science-Projects/blob/master/Machine Learning Capstone v3.ipynb" target="_blank">
+                        <img src="images/teachers.png" alt="Modeling Wisconsin Teacher Compensation" class="project-image"></a>
+                </div>
+            </div>
+        </section>
+        <section id="invoke-api">
+            <pre id="api-response"></pre>
+        </section>
+        <div class="social-links">
+            <p>
+                <a href="https://www.linkedin.com/in/sjangeli/" target="_blank"><img src="images/linkedin-icon.png" alt="LinkedIn"></a> |
+                <a href="https://github.com/sjangeli" target="_blank"><img src="images/github-icon.png" alt="GitHub"></a> |
+                <a href="mailto:stevenjohn.angeli@gmail.com" target="_blank"><img src="images/mail-icon.png" alt="Email"></a> 
+            </p>
+        </div>
+    </main>
+    <script src="invoke-api.js"></script>
+</body>
+</html>

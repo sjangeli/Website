@@ -357,14 +357,6 @@ resource "aws_route53_zone" "hosted_zone" {
   name = "steveangeli.com"
 }
 
-resource "aws_route53_record" "www" {
-  zone_id = aws_route53_zone.hosted_zone.zone_id
-  name    = "www.steveangeli.com"
-  type    = "CNAME"
-  ttl     = 300
-  records = ["steveangeli.com"]
-}
-
 resource "aws_route53_record" "root" {
   zone_id = aws_route53_zone.hosted_zone.zone_id
   name    = "steveangeli.com"
@@ -375,4 +367,12 @@ resource "aws_route53_record" "root" {
     zone_id                = "Z2FDTNDATAQYW2"              # CloudFront's hosted zone ID (static value for all CloudFront distributions)
     evaluate_target_health = false
   }
+}
+
+resource "aws_route53_record" "www" {
+  zone_id = aws_route53_zone.hosted_zone.zone_id
+  name    = "www.steveangeli.com"
+  type    = "CNAME"
+  ttl     = 300
+  records = ["steveangeli.com"]
 }

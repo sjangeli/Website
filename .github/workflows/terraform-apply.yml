@@ -11,7 +11,6 @@ env:
   TF_WORKSPACE: "my-website"
   CONFIG_DIRECTORY: "./"
 
-
 jobs:
   terraform:
     if: github.repository != 'sjangeli/My Website'
@@ -45,3 +44,23 @@ jobs:
         with:
           run: ${{ steps.apply-run.outputs.run_id }}
           comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
+        
+      - name: Get Terraform Outputs
+        if: steps.apply.outputs.status == 'Success'
+        id: get_outputs
+        run: |
+            terraform init
+            terraform output -json > terraform_outputs.json
+            echo "TERRAFORM_OUTPUTS=$(cat terraform_outputs.json)" >> "$GITHUB_OUTPUT"
+  
+      - name: Extract API Gateway URL
+        if: steps.apply.outputs.status == 'Success' && steps.get_outputs.outputs.TERRAFORM_OUTPUTS
+        id: extract_api_gateway_url
+        run: |
+            API_GATEWAY_URL=$(echo "${{ fromJson(steps.get_outputs.outputs.TERRAFORM_OUTPUTS).api_gateway_url }}" | sed 's/\\"/"/g') # Extract output variable assuming its name is "api_gateway_url"
+            echo "API_GATEWAY_URL=$API_GATEWAY_URL" >> "$GITHUB_OUTPUT"
+  
+      - name: Output API Gateway URL
+        if: steps.extract_api_gateway_url.outputs.API_GATEWAY_URL
+        run: |
+          echo "API Gateway URL: ${{ steps.extract_api_gateway_url.outputs.API_GATEWAY_URL }}"

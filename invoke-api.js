@@ -1,5 +1,5 @@
 // Replace with your API Gateway endpoint URL
-const apiUrl = process.env.API_GATEWAY_URL + '/visitor-counter';
+const apiUrl = 'https://b8xtrjehn4.execute-api.us-east-1.amazonaws.com/prod/visitor-counter';
 
 async function invokeApi() {
     try {

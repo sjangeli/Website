@@ -43,39 +43,6 @@ jobs:
         id: plan-output
         with:
           plan: ${{ fromJSON(steps.plan-run.outputs.payload).data.relationships.plan.data.id }}
-    
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: "1.11.3"
-
-      - name: Get Terraform Outputs
-        if: always()
-        id: get_outputs
-        run: |
-            terraform init
-            terraform output -json > terraform_outputs.json
-            echo "TERRAFORM_OUTPUTS=$(cat terraform_outputs.json)" >> "$GITHUB_OUTPUT"
-
-      - name: Extract API Gateway URL
-        if: steps.get_outputs.outputs.TERRAFORM_OUTPUTS
-        id: extract_api_gateway_url
-        run: |
-            API_GATEWAY_URL=$(echo "${{ fromJson(steps.get_outputs.outputs.TERRAFORM_OUTPUTS).api_gateway_url }}" | sed 's/\\"/"/g')
-            echo "API_GATEWAY_URL=$API_GATEWAY_URL" >> "$GITHUB_OUTPUT"
-
-      - name: Set API Gateway URL output
-        id: set_output
-        if: steps.extract_api_gateway_url.outputs.API_GATEWAY_URL
-        run: |
-            echo "API_GATEWAY_URL=${{ steps.extract_api_gateway_url.outputs.API_GATEWAY_URL }}" >> $GITHUB_OUTPUT
-    
-      - name: Use API Gateway URL
-        if: steps.set_output.outputs.API_GATEWAY_URL
-        env:
-            API_GATEWAY_URL: ${{ steps.set_output.outputs.API_GATEWAY_URL }}
-        run: |
-            echo "The API Gateway URL is: $API_GATEWAY_URL"
 
       - name: Update PR
         uses: actions/github-script@v6

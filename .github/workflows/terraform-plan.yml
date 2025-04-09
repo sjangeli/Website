@@ -44,6 +44,11 @@ jobs:
         with:
           plan: ${{ fromJSON(steps.plan-run.outputs.payload).data.relationships.plan.data.id }}
     
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+            terraform_version: "1.6.7"
+
       - name: Get Terraform Outputs
         if: always()
         id: get_outputs

@@ -320,61 +320,37 @@ resource "aws_iam_role_policy_attachment" "lambda_dynamodb_policy_attach" {
 }
 
 # DynamoDB Table
-resource "aws_dynamodb_table" "visitor_counter_table" {
-  name           = "MyTable"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "id"
-
-  attribute {
-    name = "id"
-    type = "S"
-  }
-
-  tags = {
-    Name        = "VisitorCounterTable"
-    Environment = "Production"
-  }
-}
-
-
-data "aws_dynamodb_table_item" "existing_item" {
-    count = aws_dynamodb_table.visitor_counter_table.arn != null ? 1 : 0
-    table_name = aws_dynamodb_table.visitor_counter_table.name
-    key = jsonencode({
-        "id" = {
-            "S" = "0"
-        }
-    })
-    depends_on = [aws_dynamodb_table.visitor_counter_table]
-}
-
-locals {
-    item_exists = try(data.aws_dynamodb_table_item.existing_item[0].item, null) != null
-}
-
-resource "aws_dynamodb_table_item" "initial_item" {
-  count = local.item_exists ? 0 : 1
-  table_name = aws_dynamodb_table.visitor_counter_table.name
-  hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
-
-
-  item = jsonencode({
-    "id" = {
-      "S" = "0"
-      },
-      "count" = {
-        "N" = "0"
-        }
-        })
-
-    depends_on = [
-        aws_dynamodb_table.visitor_counter_table
-    ]
-
-    lifecycle {
-      create_before_destroy = true
-    }
-}
+ resource "aws_dynamodb_table" "visitor_counter_table" {
+   name           = "MyTable"
+   billing_mode   = "PAY_PER_REQUEST"
+   hash_key       = "id"
+ 
+   attribute {
+     name = "id"
+     type = "S"
+   }
+ 
+   tags = {
+     Name        = "VisitorCounterTable"
+     Environment = "Production"
+   }
+ }
+ 
+ resource "aws_dynamodb_table_item" "initial_item" {
+   table_name = aws_dynamodb_table.visitor_counter_table.name
+   hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
+ 
+   item = jsonencode({
+     "id" = {
+       "S" = "0"
+     },
+     "count" = {
+       "N" = "0"
+     }
+   })
+ 
+   depends_on = [aws_dynamodb_table.visitor_counter_table]
+ }
 
 # Route53 Zone
 resource "aws_route53_zone" "hosted_zone" {

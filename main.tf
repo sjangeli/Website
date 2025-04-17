@@ -320,37 +320,37 @@ resource "aws_iam_role_policy_attachment" "lambda_dynamodb_policy_attach" {
 }
 
 # DynamoDB Table
-resource "aws_dynamodb_table" "visitor_counter_table" {
-  name           = "MyTable"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "id"
-
-  attribute {
-    name = "id"
-    type = "S"
-  }
-
-  tags = {
-    Name        = "VisitorCounterTable"
-    Environment = "Production"
-  }
-}
-
-# resource "aws_dynamodb_table_item" "initial_item" {
-#  table_name = aws_dynamodb_table.visitor_counter_table.name
-#  hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
-
-#  item = jsonencode({
-#    "id" = {
-#      "S" = "0"
-#    },
-#    "count" = {
-#      "N" = "0"
-#    }
-#  })
-
-#  depends_on = [aws_dynamodb_table.visitor_counter_table]
-#}
+ resource "aws_dynamodb_table" "visitor_counter_table" {
+   name           = "MyTable"
+   billing_mode   = "PAY_PER_REQUEST"
+   hash_key       = "id"
+ 
+   attribute {
+     name = "id"
+     type = "S"
+   }
+ 
+   tags = {
+     Name        = "VisitorCounterTable"
+     Environment = "Production"
+   }
+ }
+ 
+ resource "aws_dynamodb_table_item" "initial_item" {
+   table_name = aws_dynamodb_table.visitor_counter_table.name
+   hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
+ 
+   item = jsonencode({
+     "id" = {
+       "S" = "0"
+     },
+     "count" = {
+       "N" = "0"
+     }
+   })
+ 
+   depends_on = [aws_dynamodb_table.visitor_counter_table]
+ }
 
 # Route53 Zone
 resource "aws_route53_zone" "hosted_zone" {

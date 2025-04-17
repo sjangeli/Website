@@ -304,8 +304,8 @@ resource "aws_iam_policy" "dynamodb_access_policy" {
       {
         Action = [
           "dynamodb:GetItem",
-          "dynamodb:PutItem",    # Add putItem if the lambda also writes to the table
-          "dynamodb:UpdateItem",  # Add UpdateItem if the lambda updates the table
+          "dynamodb:PutItem",    
+          "dynamodb:UpdateItem",  
         ],
         Effect   = "Allow",
         Resource = "arn:aws:dynamodb:us-east-1:593793034365:table/MyTable",
@@ -336,21 +336,21 @@ resource "aws_dynamodb_table" "visitor_counter_table" {
   }
 }
 
-resource "aws_dynamodb_table_item" "initial_item" {
-  table_name = aws_dynamodb_table.visitor_counter_table.name
-  hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
+# resource "aws_dynamodb_table_item" "initial_item" {
+#  table_name = aws_dynamodb_table.visitor_counter_table.name
+#  hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
 
-  item = jsonencode({
-    "id" = {
-      "S" = "0"
-    },
-    "count" = {
-      "N" = "0"
-    }
-  })
+#  item = jsonencode({
+#    "id" = {
+#      "S" = "0"
+#    },
+#    "count" = {
+#      "N" = "0"
+#    }
+#  })
 
-  depends_on = [aws_dynamodb_table.visitor_counter_table]
-}
+#  depends_on = [aws_dynamodb_table.visitor_counter_table]
+#}
 
 # Route53 Zone
 resource "aws_route53_zone" "hosted_zone" {

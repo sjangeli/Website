@@ -337,7 +337,7 @@ resource "aws_dynamodb_table" "visitor_counter_table" {
 }
 
 data "aws_dynamodb_table_item" "existing_item" {
-  count = aws_dynamodb_table.visitor_counter_table.arn != null ? 1 : 0
+  count      = aws_dynamodb_table.visitor_counter_table.arn != null ? 1 : 0
   table_name = aws_dynamodb_table.visitor_counter_table.name
   key = jsonencode({
       "id" = {
@@ -347,9 +347,10 @@ data "aws_dynamodb_table_item" "existing_item" {
   depends_on = [aws_dynamodb_table.visitor_counter_table]
 }
 
+
 resource "aws_dynamodb_table_item" "initial_item" {
-  count = data.aws_dynamodb_table_item.existing_item.item == null ? 1 : 0
-  table_name = awsexpands_on_table.visitor_counter_table.name
+  count = data.aws_dynamodb_table_item.existing_item[0].item == null ? 1 : 0
+  table_name = aws_dynamodb_table.visitor_counter_table.name
   hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
 
   item = jsonencode({

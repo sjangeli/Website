@@ -336,7 +336,6 @@ resource "aws_dynamodb_table" "visitor_counter_table" {
   }
 }
 
-
 data "aws_dynamodb_table_item" "existing_item" {
     table_name = aws_dynamodb_table.visitor_counter_table.name
     key = jsonencode({
@@ -345,22 +344,12 @@ data "aws_dynamodb_table_item" "existing_item" {
         }
     })
     depends_on = [aws_dynamodb_table.visitor_counter_table]
-
-    # Ignore changes to all attributes after initial creation
-    lifecycle {
-        ignore_changes = [
-            item,
-        ]
-    }
-
 }
 
-
 resource "aws_dynamodb_table_item" "initial_item" {
-  count      = data.aws_dynamodb_table_item.existing_item.item == null ? 1 : 0
+  count = data.aws_dynamodb_table_item.existing_item.item == null ? 1 : 0
   table_name = aws_dynamodb_table.visitor_counter_table.name
   hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
-
 
   item = jsonencode({
     "id" = {
@@ -370,10 +359,15 @@ resource "aws_dynamodb_table_item" "initial_item" {
         "N" = "0"
         }
         })
-    depends_on = [
-      aws_dynamodb_table.visitor_counter_table,
-      data.aws_dynamodb_table_item.existing_item,
-    ]
+
+  depends_on = [
+    aws_dynamodb_table.visitor_counter_table,
+    data.aws_dynamodb_table_item.existing_item,
+  ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # Route53 Zone

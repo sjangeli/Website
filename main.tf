@@ -344,18 +344,15 @@ data "aws_dynamodb_table_item" "existing_item" {
     }
   })
   depends_on = [aws_dynamodb_table.visitor_counter_table]
-
-  # Use try to handle empty result
-  lifecycle {
-    precondition {
-      condition     = try(self.item, null) != null
-      error_message = "Item does not exist"
-    }
-  }
 }
 
+locals {
+    item_exists = try(data.aws_dynamodb_table_item.existing_item.item, null) != null
+}
+
+
 resource "aws_dynamodb_table_item" "initial_item" {
-    count = try(data.aws_dynamodb_table_item.existing_item.item, null) == null ? 1 : 0
+    count      = local.item_exists ? 0 : 1
     table_name = aws_dynamodb_table.visitor_counter_table.name
     hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
 
@@ -370,6 +367,7 @@ resource "aws_dynamodb_table_item" "initial_item" {
 
   depends_on = [
     aws_dynamodb_table.visitor_counter_table,
+    data.aws_dynamodb_table_item.existing_item,
   ]
 
     lifecycle {

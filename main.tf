@@ -336,22 +336,27 @@ resource "aws_dynamodb_table" "visitor_counter_table" {
   }
 }
 
+
 data "aws_dynamodb_table_item" "existing_item" {
-  count      = aws_dynamodb_table.visitor_counter_table.arn != null ? 1 : 0
-  table_name = aws_dynamodb_table.visitor_counter_table.name
-  key = jsonencode({
-      "id" = {
-          "S" = "0"
-      }
-  })
-  depends_on = [aws_dynamodb_table.visitor_counter_table]
+    count = aws_dynamodb_table.visitor_counter_table.arn != null ? 1 : 0
+    table_name = aws_dynamodb_table.visitor_counter_table.name
+    key = jsonencode({
+        "id" = {
+            "S" = "0"
+        }
+    })
+    depends_on = [aws_dynamodb_table.visitor_counter_table]
 }
 
+locals {
+    item_exists = try(data.aws_dynamodb_table_item.existing_item[0].item, null) != null
+}
 
 resource "aws_dynamodb_table_item" "initial_item" {
-  count = data.aws_dynamodb_table_item.existing_item[0].item == null ? 1 : 0
+  count = local.item_exists ? 0 : 1
   table_name = aws_dynamodb_table.visitor_counter_table.name
   hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
+
 
   item = jsonencode({
     "id" = {
@@ -363,11 +368,11 @@ resource "aws_dynamodb_table_item" "initial_item" {
         })
 
     depends_on = [
-    aws_dynamodb_table.visitor_counter_table,
-  ]
+        aws_dynamodb_table.visitor_counter_table
+    ]
 
     lifecycle {
-        create_before_destroy = true
+      create_before_destroy = true
     }
 }
 

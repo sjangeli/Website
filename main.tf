@@ -337,19 +337,27 @@ resource "aws_dynamodb_table" "visitor_counter_table" {
 }
 
 data "aws_dynamodb_table_item" "existing_item" {
-    table_name = aws_dynamodb_table.visitor_counter_table.name
-    key = jsonencode({
-        "id" = {
-            "S" = "0"
-        }
-    })
-    depends_on = [aws_dynamodb_table.visitor_counter_table]
+  table_name = aws_dynamodb_table.visitor_counter_table.name
+  key = jsonencode({
+    "id" = {
+      "S" = "0"
+    }
+  })
+  depends_on = [aws_dynamodb_table.visitor_counter_table]
+
+  # Use try to handle empty result
+  lifecycle {
+    precondition {
+      condition     = try(self.item, null) != null
+      error_message = "Item does not exist"
+    }
+  }
 }
 
 resource "aws_dynamodb_table_item" "initial_item" {
-  count = data.aws_dynamodb_table_item.existing_item.item == null ? 1 : 0
-  table_name = aws_dynamodb_table.visitor_counter_table.name
-  hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
+    count = try(data.aws_dynamodb_table_item.existing_item.item, null) == null ? 1 : 0
+    table_name = aws_dynamodb_table.visitor_counter_table.name
+    hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
 
   item = jsonencode({
     "id" = {
@@ -362,12 +370,11 @@ resource "aws_dynamodb_table_item" "initial_item" {
 
   depends_on = [
     aws_dynamodb_table.visitor_counter_table,
-    data.aws_dynamodb_table_item.existing_item,
   ]
 
-  lifecycle {
-    create_before_destroy = true
-  }
+    lifecycle {
+        create_before_destroy = true
+    }
 }
 
 # Route53 Zone

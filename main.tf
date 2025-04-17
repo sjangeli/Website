@@ -336,21 +336,45 @@ resource "aws_dynamodb_table" "visitor_counter_table" {
   }
 }
 
-# resource "aws_dynamodb_table_item" "initial_item" {
-#  table_name = aws_dynamodb_table.visitor_counter_table.name
-#  hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
 
-#  item = jsonencode({
-#    "id" = {
-#      "S" = "0"
-#    },
-#    "count" = {
-#      "N" = "0"
-#    }
-#  })
+data "aws_dynamodb_table_item" "existing_item" {
+    table_name = aws_dynamodb_table.visitor_counter_table.name
+    key = jsonencode({
+        "id" = {
+            "S" = "0"
+        }
+    })
+    depends_on = [aws_dynamodb_table.visitor_counter_table]
 
-#  depends_on = [aws_dynamodb_table.visitor_counter_table]
-#}
+    # Ignore changes to all attributes after initial creation
+    lifecycle {
+        ignore_changes = [
+            item,
+        ]
+    }
+
+}
+
+
+resource "aws_dynamodb_table_item" "initial_item" {
+  count      = data.aws_dynamodb_table_item.existing_item.item == null ? 1 : 0
+  table_name = aws_dynamodb_table.visitor_counter_table.name
+  hash_key   = aws_dynamodb_table.visitor_counter_table.hash_key
+
+
+  item = jsonencode({
+    "id" = {
+      "S" = "0"
+      },
+      "count" = {
+        "N" = "0"
+        }
+        })
+    depends_on = [
+      aws_dynamodb_table.visitor_counter_table,
+      data.aws_dynamodb_table_item.existing_item,
+    ]
+}
 
 # Route53 Zone
 resource "aws_route53_zone" "hosted_zone" {
